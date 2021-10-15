@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router ,Route, Redirect, Switch, Link } from "react-router-dom";
 import PrivateRoute from './PrivateRoute';
 import styled from 'styled-components';
 
@@ -10,14 +10,28 @@ import Login from './Login';
 import Logout from './Logout';
 
 const App = () => {
+  let isLoggedIn = localStorage.getItem("token");
+
   return (
     <AppContainer>
       <LambdaHeader/>
       <Header/>
       <RouteContainer>
-        <Route exact path="/">
-          <Login/>
-        </Route>          
+        <Router>
+        <Switch>
+          <PrivateRoute path="/view" component={View}>
+            <View/>
+            </PrivateRoute>
+          <PrivateRoute path="/logout" component={Logout}/>
+
+            <Route path="/login" component={Login}>
+              <Login />
+              </Route>
+            <Route path="/" component={Login} >
+              <Redirect to="/Login" />
+            </Route>
+        </Switch>
+        </Router>       
       </RouteContainer>
     </AppContainer>
   )
