@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import Article from './Article';
 import EditForm from './EditForm';
+import { useParams, useHistory } from 'react-router-dom';
 
 const View = (props) => {
+    const { id } = useParams();
+    const { push } = useHistory();
     const [articles, setArticles] = useState([]);
     const [editing, setEditing] = useState(false);
     const [editId, setEditId] = useState();
@@ -21,6 +24,11 @@ const View = (props) => {
 }, []);
 
     const handleDelete = (id) => {
+        axiosWithAuth().delete(`http://localhost:5000/api/articles/${id}`)
+            .then(res => {
+                setArticles(articles.filter(item => (item.id !== id)));
+            })
+    .catch(err=>{console.log(err)})
     }
 
     const handleEdit = (article) => {
