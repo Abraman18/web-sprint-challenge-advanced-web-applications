@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axiosWithAuth from '../utils/axiosWithAuth';
+import axios from 'axios';
 import Article from './Article';
 import EditForm from './EditForm';
 import { useParams, useHistory } from 'react-router-dom';
 
 const View = (props) => {
-    const { id } = useParams();
+    const { article } = useParams();
     const { push } = useHistory();
     const [articles, setArticles] = useState([]);
     const [editing, setEditing] = useState(false);
@@ -32,6 +33,14 @@ const View = (props) => {
     }
 
     const handleEdit = (article) => {
+        axiosWithAuth().put(`http://localhost:5000/api/articles/${editId}`, article)
+            .then(resp => {
+                console.log(resp);
+                setEditing(false);
+                setArticles(resp.data);
+            }).catch(err => {
+                console.log(err.response)
+            });
     }
 
     const handleEditSelect = (id)=> {
